@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="A distributed storage system for managing file replication and consistency across multiple nodes." /><meta name="author" content="Squid Storage Contributors" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Squid Storage</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Squid Storage
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#key-components">Key Components</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#quick-links">Quick Links</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#platform-support">Platform Support</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="architecture/">Architecture</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Components</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="components/server/">Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="components/datanode/">DataNode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="components/client/">Client</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="protocol/">Squid Protocol</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="contributing/">Contributing</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Squid Storage</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Basigli/Squid-Storage/edit/master/docs/index.md">Edit on Basigli/Squid-Storage</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="squid-storage">Squid Storage</h1>
+<p><a href="https://github.com/MHS-20/Squid-Storage/actions/workflows/cmake-multi-platform.yml"><img alt="CMake Build (Ubuntu + macOS)" src="https://github.com/MHS-20/Squid-Storage/actions/workflows/cmake-multi-platform.yml/badge.svg" /></a></p>
+<p><strong>Squid Storage</strong> is a distributed storage system designed to manage file replication and consistency of a specific folder across multiple nodes.</p>
+<p>It provides:</p>
+<ul>
+<li><strong>Automatic replication</strong> — files are replicated across multiple DataNodes for fault tolerance.</li>
+<li><strong>Distributed file locking</strong> — prevents concurrent writes and data corruption.</li>
+<li><strong>Graphical client interface</strong> — users can create, read, update, and delete files through a GUI.</li>
+<li><strong>Partition tolerance</strong> — every component keeps running and attempts reconnection if disconnected.</li>
+<li><strong>Real-time propagation</strong> — changes are immediately broadcast to all connected clients and DataNodes.</li>
+</ul>
+<h2 id="key-components">Key Components</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Server</strong></td>
+<td>Central coordinator — manages file metadata, client/DataNode connections, and replication</td>
+</tr>
+<tr>
+<td><strong>DataNode</strong></td>
+<td>Storage node — stores file replicas and responds to server requests</td>
+</tr>
+<tr>
+<td><strong>Client</strong></td>
+<td>GUI application — lets users interact with the distributed storage system</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-links">Quick Links</h2>
+<ul>
+<li><a href="getting-started/">Getting Started</a> — build and run Squid Storage</li>
+<li><a href="architecture/">Architecture</a> — how the system is designed</li>
+<li><a href="protocol/">Squid Protocol</a> — the custom wire protocol</li>
+<li><a href="configuration/">Configuration</a> — runtime parameters</li>
+<li><a href="contributing/">Contributing</a> — how to contribute</li>
+</ul>
+<h2 id="platform-support">Platform Support</h2>
+<p>Squid Storage is continuously built and tested on <strong>Ubuntu</strong> and <strong>macOS</strong> via GitHub Actions.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="getting-started/" class="btn btn-neutral float-right" title="Getting Started">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Basigli/Squid-Storage" class="fa fa-code-fork" style="color: #fcfcfc"> Basigli/Squid-Storage</a>
+        </span>
+    
+    
+    
+      <span><a href="getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-03-18 15:36:17.364511+00:00
+-->

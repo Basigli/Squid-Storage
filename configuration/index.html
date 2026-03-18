@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Squid Storage Contributors" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Configuration - Squid Storage</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuration";
+        var mkdocs_page_input_path = "configuration.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Squid Storage
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Components</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/server/">Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/datanode/">DataNode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/client/">Client</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../protocol/">Squid Protocol</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#server">Server</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#datanode">DataNode</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#client">Client</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#choosing-the-replication-factor">Choosing the Replication Factor</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Squid Storage</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Basigli/Squid-Storage/edit/master/docs/configuration.md">Edit on Basigli/Squid-Storage</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="configuration">Configuration</h1>
+<p>All three Squid Storage executables accept runtime configuration via command-line arguments. No configuration files are required.</p>
+<h2 id="server">Server</h2>
+<pre><code class="language-bash">./SquidStorageServer [port] [replicationFactor] [timeoutSeconds]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>port</code></td>
+<td>integer</td>
+<td><code>12345</code></td>
+<td>TCP port the server listens on</td>
+</tr>
+<tr>
+<td><code>replicationFactor</code></td>
+<td>integer</td>
+<td><code>2</code></td>
+<td>Number of DataNode replicas maintained per file. A higher value improves fault tolerance but increases storage usage.</td>
+</tr>
+<tr>
+<td><code>timeoutSeconds</code></td>
+<td>integer</td>
+<td><code>60</code></td>
+<td>Socket operation timeout in seconds. Connections that do not respond within this window are considered failed.</td>
+</tr>
+</tbody>
+</table>
+<p>There are also two compile-time constants in <code>server/src/server.hpp</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEFAULT_LOCK_INTERVAL</code></td>
+<td><code>5</code> (minutes)</td>
+<td>How frequently stale file locks are checked and released</td>
+</tr>
+<tr>
+<td><code>DEFAULT_PATH</code></td>
+<td><code>./test_txt/test_server</code></td>
+<td>Default working directory for the server's own file store</td>
+</tr>
+<tr>
+<td><code>BUFFER_SIZE</code></td>
+<td><code>1024</code> bytes</td>
+<td>Read buffer size for socket I/O</td>
+</tr>
+</tbody>
+</table>
+<h2 id="datanode">DataNode</h2>
+<pre><code class="language-bash">./DataNode [serverIP] [serverPort]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serverIP</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>IP address of the Server to connect to</td>
+</tr>
+<tr>
+<td><code>serverPort</code></td>
+<td>integer</td>
+<td><code>12345</code></td>
+<td>TCP port of the Server</td>
+</tr>
+</tbody>
+</table>
+<p>The DataNode uses its <strong>current working directory</strong> as the storage root. Set this by running the process from the desired directory.</p>
+<h2 id="client">Client</h2>
+<pre><code class="language-bash">./SquidStorage [serverIP] [serverPort]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serverIP</code></td>
+<td>string</td>
+<td><code>127.0.0.1</code></td>
+<td>IP address of the Server to connect to</td>
+</tr>
+<tr>
+<td><code>serverPort</code></td>
+<td>integer</td>
+<td><code>12345</code></td>
+<td>TCP port of the Server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="choosing-the-replication-factor">Choosing the Replication Factor</h2>
+<table>
+<thead>
+<tr>
+<th>Replication Factor</th>
+<th>Meaning</th>
+<th>Minimum DataNodes Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>No redundancy — file exists on exactly one DataNode</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Can survive the loss of one DataNode (default)</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>Can survive the simultaneous loss of two DataNodes</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>Can survive the loss of N−1 DataNodes</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<p>If the number of available DataNodes is less than the replication factor, the Server replicates to as many nodes as are available and will automatically increase replicas as new nodes join.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../protocol/" class="btn btn-neutral float-left" title="Squid Protocol"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../contributing/" class="btn btn-neutral float-right" title="Contributing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Basigli/Squid-Storage" class="fa fa-code-fork" style="color: #fcfcfc"> Basigli/Squid-Storage</a>
+        </span>
+    
+    
+      <span><a href="../protocol/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../contributing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

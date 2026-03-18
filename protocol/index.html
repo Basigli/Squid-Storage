@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Squid Storage Contributors" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Squid Protocol - Squid Storage</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Squid Protocol";
+        var mkdocs_page_input_path = "protocol.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Squid Storage
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Components</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/server/">Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/datanode/">DataNode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/client/">Client</a>
+                  </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Squid Protocol</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#message-format">Message Format</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example-messages">Example Messages</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#message-reference">Message Reference</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#argument-details">Argument Details</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#filepath">filePath</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#islocked">isLocked</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nodetype">nodeType</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#processname">processName</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#file-transfer">File Transfer</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#versioned-operations">Versioned Operations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Squid Storage</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Squid Protocol</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Basigli/Squid-Storage/edit/master/docs/protocol.md">Edit on Basigli/Squid-Storage</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="squid-protocol">Squid Protocol</h1>
+<p>The <strong>Squid Protocol</strong> is a lightweight, text-based application protocol used for all communication between Clients, the Server, and DataNodes.</p>
+<h2 id="message-format">Message Format</h2>
+<p>Every message follows the pattern:</p>
+<pre><code>Keyword&lt;ArgName1:Arg1, ArgName2:Arg2, ..., ArgNameN:ArgN&gt;
+</code></pre>
+<p>Arguments are comma-separated key-value pairs enclosed in angle brackets. Messages with no arguments still include the angle brackets:</p>
+<pre><code>Heartbeat&lt;&gt;
+</code></pre>
+<h3 id="example-messages">Example Messages</h3>
+<pre><code>CreateFile&lt;filePath:/squidstorage/notes.txt&gt;
+UpdateFile&lt;filePath:/squidstorage/notes.txt&gt;
+AcquireLock&lt;filePath:/squidstorage/notes.txt&gt;
+Response&lt;ACK&gt;
+Response&lt;isLocked:true&gt;
+Identify&lt;&gt;
+Response&lt;nodeType:DATANODE, processName:dn-1&gt;
+</code></pre>
+<h2 id="message-reference">Message Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Keyword</th>
+<th>Direction</th>
+<th>Arguments</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreateFile</code></td>
+<td>Client → Server, Server → DataNode</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>TransferFile</code></td>
+<td>Server → DataNode</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>ReadFile</code></td>
+<td>Client → Server</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code> + file content</td>
+</tr>
+<tr>
+<td><code>UpdateFile</code></td>
+<td>Client → Server, Server → DataNode</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>DeleteFile</code></td>
+<td>Client → Server, Server → DataNode</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>AcquireLock</code></td>
+<td>Client → Server</td>
+<td><code>filePath</code></td>
+<td><code>isLocked</code> (true/false)</td>
+</tr>
+<tr>
+<td><code>ReleaseLock</code></td>
+<td>Client → Server</td>
+<td><code>filePath</code></td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>Heartbeat</code></td>
+<td>Server → DataNode</td>
+<td>—</td>
+<td><code>ACK</code></td>
+</tr>
+<tr>
+<td><code>SyncStatus</code></td>
+<td>Client/DataNode → Server</td>
+<td>—</td>
+<td><code>ACK</code> + file version map</td>
+</tr>
+<tr>
+<td><code>Identify</code></td>
+<td>Server → peer</td>
+<td>—</td>
+<td><code>nodeType</code>, <code>processName</code></td>
+</tr>
+<tr>
+<td><code>Response</code></td>
+<td>any</td>
+<td><code>ACK</code> / <code>nodeType,processName</code> / <code>isLocked</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Close</code></td>
+<td>any</td>
+<td>—</td>
+<td><code>ACK</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="argument-details">Argument Details</h2>
+<h3 id="filepath"><code>filePath</code></h3>
+<p>The path of the file inside the shared storage namespace. Always an absolute-style path beginning with <code>/</code>, for example <code>/squidstorage/report.txt</code>.</p>
+<h3 id="islocked"><code>isLocked</code></h3>
+<p>Boolean string returned by <code>AcquireLock</code>. <code>true</code> means the lock was successfully granted; <code>false</code> means another client currently holds it.</p>
+<h3 id="nodetype"><code>nodeType</code></h3>
+<p>Returned in an <code>Identify</code> response. One of:</p>
+<ul>
+<li><code>CLIENT</code></li>
+<li><code>DATANODE</code></li>
+</ul>
+<h3 id="processname"><code>processName</code></h3>
+<p>A human-readable identifier for the connecting process (e.g. a DataNode instance name or client window title). Used by the Server to populate its endpoint maps.</p>
+<h2 id="file-transfer">File Transfer</h2>
+<p>File content is transmitted immediately after the protocol message using a <strong>length-prefixed</strong> binary transfer:</p>
+<ol>
+<li>The sender transmits the message (e.g. <code>CreateFile&lt;filePath:...&gt;</code>).</li>
+<li>The sender then transmits the file length as a 4-byte big-endian integer.</li>
+<li>The sender transmits the raw file bytes.</li>
+<li>The receiver sends a <code>Response&lt;ACK&gt;</code>.</li>
+</ol>
+<p>The <code>FileTransfer</code> class in <code>common/src/filesystem/filetransfer.cpp</code> implements both sides.</p>
+<h2 id="versioned-operations">Versioned Operations</h2>
+<p><code>CreateFile</code> and <code>UpdateFile</code> can optionally carry a <code>version</code> argument when the Server needs to push a specific version to a DataNode during rebalancing:</p>
+<pre><code>CreateFile&lt;filePath:/squidstorage/notes.txt, version:3&gt;
+</code></pre>
+<h2 id="implementation">Implementation</h2>
+<p>The protocol is implemented in:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>common/src/squidprotocol/squidprotocol.hpp/.cpp</code></td>
+<td><code>SquidProtocol</code> class — send/receive helpers for every message type</td>
+</tr>
+<tr>
+<td><code>common/src/squidprotocol/squidProtocolFormatter.hpp/.cpp</code></td>
+<td>Serialises and deserialises <code>Message</code> objects to/from the text wire format</td>
+</tr>
+<tr>
+<td><code>server/src/squidProtocolServer.cpp</code></td>
+<td>Server-side request dispatcher</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../components/client/" class="btn btn-neutral float-left" title="Client"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../configuration/" class="btn btn-neutral float-right" title="Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Basigli/Squid-Storage" class="fa fa-code-fork" style="color: #fcfcfc"> Basigli/Squid-Storage</a>
+        </span>
+    
+    
+      <span><a href="../components/client/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../configuration/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

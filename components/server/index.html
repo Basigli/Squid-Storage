@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Squid Storage Contributors" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Server - Squid Storage</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Server";
+        var mkdocs_page_input_path = "components/server.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Squid Storage
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Components</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Server</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#responsibilities">Responsibilities</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#starting-the-server">Starting the Server</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#internal-state">Internal State</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#datanodereplicationmap">dataNodeReplicationMap</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clientendpointmap">clientEndpointMap</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#datanodeendpointmap">dataNodeEndpointMap</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#filelockmap">fileLockMap</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#key-methods">Key Methods</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#connection-handshake">Connection Handshake</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#replication-flow">Replication Flow</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fault-tolerance">Fault Tolerance</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../datanode/">DataNode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../client/">Client</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../protocol/">Squid Protocol</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../contributing/">Contributing</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Squid Storage</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Components</li>
+      <li class="breadcrumb-item active">Server</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Basigli/Squid-Storage/edit/master/docs/components/server.md">Edit on Basigli/Squid-Storage</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="server">Server</h1>
+<p>The <strong>Server</strong> (<code>SquidStorageServer</code>) is the central coordinator of Squid Storage. It manages all metadata, routes file operations between Clients and DataNodes, and monitors the health of every connected node.</p>
+<h2 id="responsibilities">Responsibilities</h2>
+<ul>
+<li>Accept incoming TCP connections from Clients and DataNodes.</li>
+<li>Route and propagate file operations (create, read, update, delete).</li>
+<li>Maintain the <code>dataNodeReplicationMap</code> — which DataNodes hold replicas of each file.</li>
+<li>Manage distributed <strong>file locks</strong> and check for lock expiry.</li>
+<li>Send periodic <strong>heartbeats</strong> to DataNodes; remove unresponsive nodes from the replication map.</li>
+<li>Rebalance file replicas when the actual replication count falls below the configured factor.</li>
+<li>Use <code>select()</code> to handle all sockets concurrently without spawning per-connection threads.</li>
+</ul>
+<h2 id="starting-the-server">Starting the Server</h2>
+<pre><code class="language-bash">./SquidStorageServer [port] [replicationFactor] [timeoutSeconds]
+</code></pre>
+<p>All arguments are optional and fall back to defaults:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>port</code></td>
+<td><code>12345</code></td>
+<td>TCP port to listen on</td>
+</tr>
+<tr>
+<td><code>replicationFactor</code></td>
+<td><code>2</code></td>
+<td>Number of DataNode replicas per file</td>
+</tr>
+<tr>
+<td><code>timeoutSeconds</code></td>
+<td><code>60</code></td>
+<td>Socket operation timeout in seconds</td>
+</tr>
+</tbody>
+</table>
+<h2 id="internal-state">Internal State</h2>
+<h3 id="datanodereplicationmap"><code>dataNodeReplicationMap</code></h3>
+<pre><code>map&lt;string /*filePath*/, map&lt;string /*datanodeName*/, SquidProtocol&gt;&gt;
+</code></pre>
+<p>Tracks, for every file, which DataNodes currently hold a replica and the corresponding protocol endpoint. When a DataNode disconnects, it is erased from this map and <code>rebalanceFileReplication()</code> is triggered.</p>
+<h3 id="clientendpointmap"><code>clientEndpointMap</code></h3>
+<pre><code>map&lt;string /*clientName*/, pair&lt;SquidProtocol /*primary*/, SquidProtocol /*secondary*/&gt;&gt;
+</code></pre>
+<p>Each Client opens two connections to the Server. The Server stores both so it can push asynchronous updates through the secondary socket.</p>
+<h3 id="datanodeendpointmap"><code>dataNodeEndpointMap</code></h3>
+<pre><code>map&lt;string /*datanodeName*/, SquidProtocol&gt;
+</code></pre>
+<p>Active DataNode connections indexed by name.</p>
+<h3 id="filelockmap"><code>fileLockMap</code></h3>
+<pre><code>map&lt;string /*filePath*/, FileLock&gt;
+</code></pre>
+<p>Stores the current lock holder and lock timestamp for every file. <code>checkFileLockExpiration()</code> periodically releases stale locks (default interval: 5 minutes).</p>
+<h2 id="key-methods">Key Methods</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run()</code></td>
+<td>Main event loop — calls <code>select()</code> and dispatches incoming messages</td>
+</tr>
+<tr>
+<td><code>handleAccept()</code></td>
+<td>Handles a new incoming connection; performs the handshake</td>
+</tr>
+<tr>
+<td><code>handleConnection()</code></td>
+<td>Processes a received message from a Client or DataNode</td>
+</tr>
+<tr>
+<td><code>propagateCreateFile()</code></td>
+<td>Sends a <code>CreateFile</code> message to the selected DataNodes</td>
+</tr>
+<tr>
+<td><code>propagateUpdateFile()</code></td>
+<td>Sends an <code>UpdateFile</code> message to all DataNodes holding the file</td>
+</tr>
+<tr>
+<td><code>propagateDeleteFile()</code></td>
+<td>Sends a <code>DeleteFile</code> message to all DataNodes holding the file</td>
+</tr>
+<tr>
+<td><code>getFileFromDataNode()</code></td>
+<td>Retrieves a file from a DataNode and forwards it to a Client</td>
+</tr>
+<tr>
+<td><code>sendHeartbeats()</code></td>
+<td>Pings all DataNodes; removes those that do not respond</td>
+</tr>
+<tr>
+<td><code>rebalanceFileReplication()</code></td>
+<td>Assigns new DataNodes to a file whose replica count is below the threshold</td>
+</tr>
+<tr>
+<td><code>acquireLock()</code> / <code>releaseLock()</code></td>
+<td>Grants or releases a distributed write lock for a file</td>
+</tr>
+<tr>
+<td><code>checkFileLockExpiration()</code></td>
+<td>Periodically releases locks that have exceeded the timeout</td>
+</tr>
+</tbody>
+</table>
+<h2 id="connection-handshake">Connection Handshake</h2>
+<p>When a new socket connects, the Server sends an <code>Identify</code> request. The peer responds with its <code>nodeType</code> (<code>CLIENT</code> or <code>DATANODE</code>) and its <code>processName</code>. Based on the type the Server:</p>
+<ul>
+<li><strong>Client</strong>: records both the primary socket (for commands) and waits for a second connection to be registered as the secondary (update) socket.</li>
+<li><strong>DataNode</strong>: registers the endpoint in <code>dataNodeEndpointMap</code> and starts including it in replication decisions.</li>
+</ul>
+<h2 id="replication-flow">Replication Flow</h2>
+<ol>
+<li>A Client calls <code>CreateFile</code> or <code>UpdateFile</code>.</li>
+<li>The Server selects <code>replicationFactor</code> DataNodes from <code>dataNodeEndpointMap</code> using round-robin.</li>
+<li>The Server forwards the file to each selected DataNode via <code>propagateCreateFile()</code> / <code>propagateUpdateFile()</code>.</li>
+<li>The Server updates <code>dataNodeReplicationMap</code> to record the new assignments.</li>
+<li>The Server broadcasts the change to all other connected Clients.</li>
+</ol>
+<h2 id="fault-tolerance">Fault Tolerance</h2>
+<ul>
+<li>The <code>sendHeartbeats()</code> loop runs in a background thread.</li>
+<li>Any DataNode that fails to respond is removed from <code>dataNodeEndpointMap</code> and <code>dataNodeReplicationMap</code>.</li>
+<li><code>rebalanceFileReplication()</code> is immediately invoked for every file that lost a replica, pushing a fresh copy to a healthy DataNode.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../architecture/" class="btn btn-neutral float-left" title="Architecture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../datanode/" class="btn btn-neutral float-right" title="DataNode">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Basigli/Squid-Storage" class="fa fa-code-fork" style="color: #fcfcfc"> Basigli/Squid-Storage</a>
+        </span>
+    
+    
+      <span><a href="../../architecture/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../datanode/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

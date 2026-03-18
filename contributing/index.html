@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Squid Storage Contributors" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Contributing - Squid Storage</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contributing";
+        var mkdocs_page_input_path = "contributing.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Squid Storage
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Components</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/server/">Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/datanode/">DataNode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../components/client/">Client</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../protocol/">Squid Protocol</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Contributing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#commit-conventions">Commit Conventions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#commit-types">Commit Types</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#branching-strategy">Branching Strategy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#versioning">Versioning</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-a-tag-and-release">Creating a Tag and Release</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#changelog">Changelog</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#building-and-testing">Building and Testing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Squid Storage</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/Basigli/Squid-Storage/edit/master/docs/contributing.md">Edit on Basigli/Squid-Storage</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="contributing">Contributing</h1>
+<p>Thank you for your interest in contributing to Squid Storage! Please follow the conventions below to keep the project consistent and maintainable.</p>
+<h2 id="commit-conventions">Commit Conventions</h2>
+<p>Follow the <strong>Conventional Commits</strong> format:</p>
+<pre><code>(type)scope: message
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">git commit -m &quot;(feat)server: add round-robin DataNode selection&quot;
+git commit -m &quot;(fix)protocol: handle empty file path argument&quot;
+git commit -m &quot;(docs)readme: add architecture diagram&quot;
+</code></pre>
+<h3 id="commit-types">Commit Types</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feat</code></td>
+<td>New feature</td>
+</tr>
+<tr>
+<td><code>chore</code></td>
+<td>Maintenance, dependency updates</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>Code restructuring without behaviour change</td>
+</tr>
+<tr>
+<td><code>fix</code></td>
+<td>Bug fix</td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>Documentation only</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Adding or updating tests</td>
+</tr>
+<tr>
+<td><code>misc</code></td>
+<td>Anything that does not fit another type</td>
+</tr>
+</tbody>
+</table>
+<p>Keep each commit focused on <strong>one logical change</strong>. Do not mix feature work and refactoring in the same commit.</p>
+<h2 id="branching-strategy">Branching Strategy</h2>
+<p>Create a <strong>feature branch</strong> for every new development phase:</p>
+<pre><code class="language-bash">git checkout -b feature/my-feature
+</code></pre>
+<p>When a milestone is reached, create a <strong>release branch</strong>:</p>
+<pre><code class="language-bash">git checkout -b release/v1.2.0
+</code></pre>
+<h2 id="versioning">Versioning</h2>
+<p>Squid Storage follows <a href="https://semver.org/">Semantic Versioning</a>:</p>
+<pre><code>MAJOR.MINOR.PATCH
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Increment when…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MAJOR</code></td>
+<td>Breaking changes to the API or protocol</td>
+</tr>
+<tr>
+<td><code>MINOR</code></td>
+<td>New backwards-compatible features</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td>Backwards-compatible bug fixes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-a-tag-and-release">Creating a Tag and Release</h3>
+<pre><code class="language-bash"># Create an annotated tag
+git tag -a v1.2.0 -m &quot;Add replication rebalancing improvements&quot;
+git push origin v1.2.0
+
+# Delete a tag (if needed)
+git tag -d v1.2.0
+git push origin --delete v1.2.0
+</code></pre>
+<p>Then go to <strong>GitHub → Releases → New Release</strong> and attach the tag.</p>
+<h2 id="changelog">Changelog</h2>
+<p>Consider writing a <code>CHANGELOG.md</code> for every new release. You can auto-generate one from commit messages:</p>
+<pre><code class="language-bash">git log --pretty=format:&quot;- %s&quot; v1.1.0..v1.2.0 &gt;&gt; CHANGELOG.md
+</code></pre>
+<p>Or write it manually using this structure:</p>
+<pre><code class="language-markdown"># Changelog
+
+## [1.2.0] - 2025-06-01
+### Added
+- Replication rebalancing on DataNode reconnect.
+
+### Fixed
+- Race condition in file lock expiration check.
+
+## [1.1.0] - 2025-04-15
+### Added
+- Secondary socket for asynchronous client updates.
+</code></pre>
+<h2 id="building-and-testing">Building and Testing</h2>
+<p>Before submitting a pull request, make sure the project builds cleanly on your platform:</p>
+<pre><code class="language-bash">cmake -B build
+cmake --build build
+</code></pre>
+<p>Run the integration tests using the scripts in <code>test/</code>:</p>
+<pre><code class="language-bash"># Requires tmux
+test/testMultiple.sh
+</code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>Documentation is built with <a href="https://www.mkdocs.org/">MkDocs</a> using the <strong>readthedocs</strong> theme. To preview changes locally:</p>
+<pre><code class="language-bash">pip install mkdocs
+mkdocs serve
+</code></pre>
+<p>Then open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your browser.</p>
+<p>To build the static site:</p>
+<pre><code class="language-bash">mkdocs build
+</code></pre>
+<p>The generated site is placed in the <code>site/</code> directory.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../configuration/" class="btn btn-neutral float-left" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Basigli/Squid-Storage" class="fa fa-code-fork" style="color: #fcfcfc"> Basigli/Squid-Storage</a>
+        </span>
+    
+    
+      <span><a href="../configuration/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
