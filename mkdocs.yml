@@ -1,0 +1,20 @@
+site_name: Squid Storage
+site_description: A distributed storage system for managing file replication and consistency across multiple nodes.
+site_author: Squid Storage Contributors
+repo_url: https://github.com/Basigli/Squid-Storage
+repo_name: Basigli/Squid-Storage
+
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Components:
+      - Server: components/server.md
+      - DataNode: components/datanode.md
+      - Client: components/client.md
+  - Squid Protocol: protocol.md
+  - Configuration: configuration.md
+  - Contributing: contributing.md

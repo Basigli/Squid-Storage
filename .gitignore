@@ -9,3 +9,6 @@ CMakeFiles/*
 !build/buildTestMultiClient.sh
 !build/buildTestMultiDataNode.sh
 !build/buildTestMultiple.sh
+
+# MkDocs generated site (build artifact)
+site/
